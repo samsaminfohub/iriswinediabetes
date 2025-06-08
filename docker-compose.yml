@@ -37,7 +37,7 @@ services:
   # MLflow Server
   mlflow:
     build:
-      context: .
+      context: ./mlflow
       dockerfile: Dockerfile.mlflow
     container_name: mlflow_server
     restart: always
@@ -62,7 +62,7 @@ services:
   # Streamlit App
   streamlit:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: streamlit_app
     restart: always
