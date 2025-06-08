@@ -72,7 +72,6 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin123}@postgres:5432/${POSTGRES_DB:-predictions_db}
       - MLFLOW_TRACKING_URI=http://mlflow:5000
     volumes:
-      - ./app_with_db.py:/app/app.py
       - ./database:/app/database
     depends_on:
       - postgres
