@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
-COPY app_with_db.py .
+COPY app.py .
 COPY database/ ./database/
 
 # Expose port
