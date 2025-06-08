@@ -19,9 +19,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile  # Most common - Dockerfile in root
-          # OR file: ./docker/Dockerfile  # If in docker folder
-          # OR file: ./src/Dockerfile     # If in src folder
+          file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/iriswinediabetes:${{ steps.vars.outputs.TAG }}
   deploy:
