@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Ce projet est une modification du projet `iriswinediabetes` qui intègre l'analyse de datasets de machine learning (Iris, Wine, Diabetes) avec un système complet d'enregistrement des résultats dans une base de données MySQL. Il combine Streamlit pour l'interface utilisateur, MLflow pour le tracking des expériences, et MySQL pour la persistance des données.
+Ce projet  `iriswinediabetes` qui intègre l'analyse de datasets de machine learning (Iris, Wine, Diabetes) avec un système complet d'enregistrement des résultats dans une base de données MySQL. Il combine Streamlit pour l'interface utilisateur, MLflow pour le tracking des expériences, et MySQL pour la persistance des données.
 
 ## ✨ Fonctionnalités
 
@@ -125,36 +125,6 @@ streamlit run app.py
 - Entraîner le modèle
 - Enregistrer les résultats
 
-### Utilitaires en ligne de commande
-
-```bash
-# Tester la connexion à la base
-python database_utils.py test
-
-# Voir le statut de la base de données
-python database_utils.py status
-
-# Résumé des performances
-python database_utils.py summary
-
-# Activité récente (7 derniers jours)
-python database_utils.py activity --days 7
-
-# Comparer les modèles
-python database_utils.py compare --dataset Iris
-
-# Générer des graphiques
-python database_utils.py plot --dataset Wine --output wine_trends.png
-
-# Exporter les données
-python database_utils.py export --format csv
-
-# Nettoyer les anciennes données (simulation)
-python database_utils.py cleanup --days 30 --dry-run
-
-# Générer un rapport HTML
-python database_utils.py report --output rapport_complet.html
-```
 
 ## 📊 Exemples de Requêtes SQL
 
@@ -243,34 +213,6 @@ Pour chaque colonne numérique :
 - **Graphiques de tendances** des performances
 - **Export des données** pour analyse externe
 
-## 🛡️ Maintenance
-
-### Nettoyage automatique
-```bash
-# Supprimer les données de plus de 30 jours
-python database_utils.py cleanup --days 30
-
-# Vérifier avant suppression
-python database_utils.py cleanup --days 30 --dry-run
-```
-
-### Sauvegarde
-```bash
-# Exporter toutes les données
-python database_utils.py export --format excel
-
-# Sauvegarde MySQL
-mysqldump -u root -p mlflow_results > backup_$(date +%Y%m%d).sql
-```
-
-### Surveillance
-```bash
-# Vérifier l'activité récente
-python database_utils.py activity --days 1
-
-# Statut des tables
-python database_utils.py status
-```
 
 ## 🎯 Cas d'Usage
 
@@ -344,45 +286,3 @@ python database_utils.py cleanup --days 0 --dry-run
 - **Iris** : Classification de fleurs (4 features, 3 classes)
 - **Wine** : Classification de vins (13 features, 3 classes)  
 - **Diabetes** : Prédiction du diabète (8 features, 2 classes)
-
-## 🤝 Contribution
-
-### Pour contribuer
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-### Standards de code
-- PEP 8 pour Python
-- Commentaires en français
-- Tests unitaires pour les nouvelles fonctionnalités
-- Documentation des nouvelles requêtes SQL
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 🏷️ Versions
-
-### v1.0.0 (Actuelle)
-- ✅ Interface Streamlit complète
-- ✅ Intégration MySQL
-- ✅ Support MLflow
-- ✅ Utilitaires d'administration
-- ✅ Requêtes SQL d'analyse
-- ✅ Export multi-format
-
-### Roadmap v1.1.0
-- 🔄 Support PostgreSQL
-- 🔄 Interface API REST
-- 🔄 Dashboard temps réel
-- 🔄 Alertes automatiques
-- 🔄 ML Pipeline automation
-
----
-
-**Auteur**: Modifié pour inclure l'intégration MySQL  
-**Contact**: [Votre email]  
-**Date**: Juin 2025
