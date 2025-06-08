@@ -5,23 +5,19 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
-    g++ \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
-COPY requirements.txt .
+# Install base packages with exact versions
+RUN pip install --no-cache-dir \
+    numpy==1.23.5 \
+    protobuf==3.20.3 \
+    altair==4.2.2 \
+    pandas==1.5.3
 
-# Install Python dependencies
+COPY ./requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
-COPY app.py .
-# Copy database directory if it exists
-RUN mkdir -p ./database
-COPY database* ./database/
+COPY . .
 
-# Expose port
-EXPOSE 8501
-
-# Run the application
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
