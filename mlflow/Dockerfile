@@ -14,7 +14,8 @@ RUN pip install --no-cache-dir \
     pandas==1.5.3 \
     mlflow==1.30.0 \
     psycopg2-binary==2.9.6 \
-    boto3==1.26.59
+    boto3==1.26.59\
+    pymysql
 
 CMD mlflow server \
     --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB} \
