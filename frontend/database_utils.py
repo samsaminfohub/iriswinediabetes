@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Utilitaires pour la gestion et l'analyse de la base de données ML
-Usage: python database_utils.py [command]
-"""
-
 import mysql.connector
 import pandas as pd
 import argparse
