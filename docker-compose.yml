@@ -1,91 +1,62 @@
-# docker-compose.yml
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:13
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_mlflow
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mlflow_results
+      MYSQL_USER: mlflow_user
+      MYSQL_PASSWORD: mlflow_password
+    ports:
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - ml-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-    networks:
-      - ml-network
+      - mlflow_network
 
   mlflow:
-    build:
-      context: ./mlflow
-    environment:
-      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-      AWS_ACCESS_KEY_ID: ${MLFLOW_S3_AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${MLFLOW_S3_AWS_SECRET_ACCESS_KEY}
-      MLFLOW_TRACKING_URI: http://mlflow:5000
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST: postgres
+    build: .
+    container_name: mlflow_server
     ports:
       - "5000:5000"
-    depends_on:
-      - postgres
-    networks:
-      - ml-network
-
-  backend:
-    build:
-      context: ./backend
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      MLFLOW_TRACKING_URI: http://mlflow:5000
-    ports:
-      - "8000:8000"
+      - MLFLOW_BACKEND_STORE_URI=mysql+pymysql://mlflow_user:mlflow_password@mysql:3306/mlflow_results
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    volumes:
+      - mlflow_artifacts:/mlflow/artifacts
     depends_on:
-      - postgres
-      - mlflow
+      - mysql
     networks:
-      - ml-network
+      - mlflow_network
+    command: mlflow server --backend-store-uri mysql+pymysql://mlflow_user:mlflow_password@mysql:3306/mlflow_results --default-artifact-root /mlflow/artifacts --host 0.0.0.0
 
-  frontend:
-    build:
-      context: ./frontend
-    environment:
-      BACKEND_URL: http://backend:8000
+  streamlit:
+    build: .
+    container_name: streamlit_app
     ports:
       - "8501:8501"
-    depends_on:
-      - backend
-    networks:
-      - ml-network
-
-  portainer:
-    image: portainer/portainer-ce
-    ports:
-      - "9000:9000"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=mlflow_user
+      - DB_PASSWORD=mlflow_password
+      - DB_NAME=mlflow_results
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - .:/app
+    depends_on:
+      - mysql
+      - mlflow
     networks:
-      - ml-network
+      - mlflow_network
+    command: streamlit run app.py --server.address 0.0.0.0
 
 volumes:
-  postgres_data:
-  portainer_data:
+  mysql_data:
+  mlflow_artifacts:
 
 networks:
-  ml-network:
+  mlflow_network:
     driver: bridge
