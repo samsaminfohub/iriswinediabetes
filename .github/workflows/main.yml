@@ -1,33 +1,29 @@
 name: CI‑CD Docker
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
       - name: Set image tag
         id: vars
         run: echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
-
       - name: Build & push
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./path/to/Dockerfile
+          file: ./Dockerfile  # Most common - Dockerfile in root
+          # OR file: ./docker/Dockerfile  # If in docker folder
+          # OR file: ./src/Dockerfile     # If in src folder
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/iriswinediabetes:${{ steps.vars.outputs.TAG }}
-
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
