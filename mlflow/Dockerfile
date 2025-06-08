@@ -1,22 +1,18 @@
 FROM python:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /mlflow
 
-# Install base packages with exact versions
+# Install MLflow and PostgreSQL dependencies
 RUN pip install --no-cache-dir \
-    numpy==1.23.5 \
-    protobuf==3.20.3 \
-    && pip install --no-cache-dir \
-    pandas==1.5.3 \
-    mlflow==1.30.0 \
-    psycopg2-binary==2.9.6 \
-    boto3==1.26.59
+    mlflow==2.9.2 \
+    psycopg2-binary \
+    protobuf==3.20.3
 
-CMD mlflow server \
-    --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB} \
-    --default-artifact-root ./mlruns \
-    --host 0.0.0.0
+# Create artifacts directory
+RUN mkdir -p /mlflow/artifacts
+
+# Expose port
+EXPOSE 5000
+
+# Default command (will be overridden by docker-compose)
+CMD ["mlflow", "server", "--host", "0.0.0.0"]
