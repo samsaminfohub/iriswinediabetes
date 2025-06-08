@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 # Copy database directory if it exists
 RUN mkdir -p ./database
-COPY database* ./database/ || true
+COPY database* ./database/
 
 # Expose port
 EXPOSE 8501
