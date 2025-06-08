@@ -7,10 +7,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -22,11 +20,10 @@ jobs:
         id: vars
         run: echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
 
-      - name: Build & push Docker image
+      - name: Build & push
         uses: docker/build-push-action@v5
         with:
           context: .
-          # Uncomment and edit the line below if your Dockerfile is in a subfolder
           file: ./path/to/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/iriswinediabetes:${{ steps.vars.outputs.TAG }}
@@ -34,9 +31,8 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy via SSH
+      - name: SSH deploy on VM
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
