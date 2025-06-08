@@ -27,7 +27,7 @@ jobs:
         with:
           context: .
           # Uncomment and edit the line below if your Dockerfile is in a subfolder
-          # file: ./path/to/Dockerfile
+          file: ./path/to/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/iriswinediabetes:${{ steps.vars.outputs.TAG }}
 
