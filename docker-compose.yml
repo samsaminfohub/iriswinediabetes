@@ -18,7 +18,7 @@ services:
       - mlflow_network
 
   mlflow:
-    build: .
+    build: .mlflow
     container_name: mlflow_server
     ports:
       - "5000:5000"
@@ -34,7 +34,7 @@ services:
     command: mlflow server --backend-store-uri mysql+pymysql://mlflow_user:mlflow_password@mysql:3306/mlflow_results --default-artifact-root /mlflow/artifacts --host 0.0.0.0
 
   streamlit:
-    build: .
+    build: .frontend
     container_name: streamlit_app
     ports:
       - "8501:8501"
